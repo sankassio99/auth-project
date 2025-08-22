@@ -1,0 +1,53 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Dashboard</h1>
+      <div class="user-info">
+        <span class="user-email">Welcome, {{ userEmail() }}</span>
+        <button class="logout-button" (click)="onLogout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16,17 21,12 16,7"></polyline>
+            <line x1="21" x2="9" y1="12" y2="12"></line>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="welcome-section">
+      <div class="welcome-card">
+        <h2>Welcome to your Dashboard!</h2>
+        <p>You have successfully authenticated. This is a protected area that only logged-in users can access.</p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">👤</div>
+            <h3>Profile</h3>
+            <p>Manage your account settings and personal information</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Analytics</h3>
+            <p>View your activity statistics and insights</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">⚙️</div>
+            <h3>Settings</h3>
+            <p>Customize your experience and preferences</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>Notes</h3>
+            <p>Create and manage your personal notes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

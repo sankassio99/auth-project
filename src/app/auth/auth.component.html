@@ -1,0 +1,77 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>{{ isLoginMode() ? 'Sign In' : 'Sign Up' }}</h1>
+      <p>{{ isLoginMode() ? 'Welcome back!' : 'Create your account' }}</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit($event)" class="auth-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [value]="password()"
+          (input)="password.set($any($event.target).value)"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+
+      @if (!isLoginMode()) {
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            [value]="confirmPassword()"
+            (input)="confirmPassword.set($any($event.target).value)"
+            placeholder="Confirm your password"
+            required
+          />
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <button 
+        type="button" 
+        class="auth-button"
+        [disabled]="isLoading()"
+        (click)="onSubmit($event)"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          Processing...
+        } @else {
+          {{ isLoginMode() ? 'Sign In' : 'Sign Up' }}
+        }
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        {{ isLoginMode() ? "Don't have an account?" : 'Already have an account?' }}
+        <button type="button" class="link-button" (click)="onSwitchMode()">
+          {{ isLoginMode() ? 'Sign Up' : 'Sign In' }}
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
