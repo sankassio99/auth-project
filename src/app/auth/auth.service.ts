@@ -1,6 +1,16 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, throwError } from "rxjs";
+import { catchError, Observable, throwError } from "rxjs";
+
+export interface AuthResponse {
+    localId: string;
+    email: string;
+    displayName: string;
+    idToken: string;
+    registered: boolean;
+    refreshToken: string;
+    expiresIn: string;
+}
 
 Injectable(
     {
@@ -10,12 +20,42 @@ Injectable(
 export class AuthService {
     private httpClient = inject(HttpClient);
     private readonly API_KEY = 'AIzaSyBGe9jO8SJU3jyNkj6N2izJkrYL1ehenBc';
-    private readonly API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
+    private readonly SIGN_UP_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
+    private readonly VERIFY_PASSWORD_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`;
 
     constructor() { }
 
-    signUp(email: string, password: string) { 
-        return this.httpClient.post(this.API_URL, {
+    signIn(email: string, password: string) : Observable<AuthResponse>{
+        return this.httpClient.post<AuthResponse>(this.VERIFY_PASSWORD_API_URL, {
+            email: email,
+            password: password,
+            returnSecureToken: true,
+        }).pipe(
+            catchError((error) => {
+                let errorMessage = 'An error occurred';
+
+                switch (error.error.error.message) {
+                    case 'EMAIL_NOT_FOUND':
+                        errorMessage = 'There is no user record corresponding to this identifier. The user may have been deleted.';
+                        break;
+                    case 'INVALID_PASSWORD':
+                        errorMessage = 'The password is invalid or the user does not have a password.';
+                        break;
+                    case 'USER_DISABLED':
+                        errorMessage = 'The user account has been disabled by an administrator.';
+                        break;
+                    default:
+                        errorMessage = error.error.error.message;
+                        break;
+                }
+
+                return throwError(() => new Error(errorMessage));
+            })
+        )
+    }
+
+    signUp(email: string, password: string): Observable<AuthResponse> { 
+        return this.httpClient.post<AuthResponse>(this.SIGN_UP_API_URL, {
             email: email,
             password: password,
             returnSecureToken: true

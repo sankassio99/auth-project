@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { AuthResponse, AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -18,6 +19,7 @@ export class AuthComponent {
   isLoading = signal(false);
   errorMessage = signal('');
   private authService = inject(AuthService);
+  private authResponse?: Observable<AuthResponse>;
 
   constructor(private router: Router) {}
 
@@ -42,30 +44,32 @@ export class AuthComponent {
     this.isLoading.set(true);
 
       if (this.isLoginMode()) {
-        // Simple login logic - accept any email/password for demo
-        if (this.email() && this.password()) {
-          localStorage.setItem('isAuthenticated', 'true');
-          localStorage.setItem('userEmail', this.email());
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.errorMessage.set('Invalid credentials');
-        }
+        this.signIn();
       } else {
-        this.authService
-          .signUp(this.email(), this.confirmPassword())
-          .subscribe({
-            next: (res) => {
-              console.log("Logged with success!");
-              this.router.navigate(['/dashboard']);
-            },
-            error: (errorMessage) => {
-              this.errorMessage.set(errorMessage);
-              this.isLoading.set(false);
-            },
-            complete: () => {
-              this.isLoading.set(false);
-            },
-          });
+        this.signUpUser();
       };
+
+      this.authResponse!.subscribe({
+        next: (res) => {
+          console.log(res);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (errorMessage) => {
+          this.errorMessage.set(errorMessage);
+          this.isLoading.set(false);
+        },
+        complete: () => {
+          this.isLoading.set(false);
+        },
+      });
+  }
+
+  private signUpUser() {
+    this.authResponse = this.authService
+      .signUp(this.email(), this.confirmPassword());
+  }
+
+  private signIn() {
+    this.authResponse = this.authService.signIn(this.email(), this.password())
   }
 }
