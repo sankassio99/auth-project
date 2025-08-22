@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -16,6 +17,7 @@ export class AuthComponent {
   confirmPassword = signal('');
   isLoading = signal(false);
   errorMessage = signal('');
+  private authService = inject(AuthService);
 
   constructor(private router: Router) {}
 
@@ -38,11 +40,7 @@ export class AuthComponent {
     }
 
     this.isLoading.set(true);
-    this.errorMessage.set('');
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading.set(false);
       if (this.isLoginMode()) {
         // Simple login logic - accept any email/password for demo
         if (this.email() && this.password()) {
@@ -53,11 +51,21 @@ export class AuthComponent {
           this.errorMessage.set('Invalid credentials');
         }
       } else {
-        // Simple registration logic
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userEmail', this.email());
-        this.router.navigate(['/dashboard']);
-      }
-    }, 1500);
+        this.authService
+          .signUp(this.email(), this.confirmPassword())
+          .subscribe({
+            next: (res) => {
+              console.log("Logged with success!");
+              this.router.navigate(['/dashboard']);
+            },
+            error: (errorMessage) => {
+              this.errorMessage.set(errorMessage);
+              this.isLoading.set(false);
+            },
+            complete: () => {
+              this.isLoading.set(false);
+            },
+          });
+      };
   }
 }
