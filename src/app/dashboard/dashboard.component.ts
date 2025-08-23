@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { UserModel } from '../auth/user.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,11 +11,10 @@ import { UserModel } from '../auth/user.model';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit {
   userEmail = signal('');
   private router = inject(Router);
   private authService = inject(AuthService);
-  private userSubscription?: Subscription;
 
   /**
    * Initializes the component.
@@ -35,10 +33,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.authService.user.pipe(take(1)).subscribe((user) => {
       this.userEmail.set(user?.email ?? '');
     });
-  }
-
-  ngOnDestroy() {
-    this.userSubscription?.unsubscribe();
   }
 
   onLogout() {
