@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthResponse, AuthService } from './auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = signal(true);
   email = signal('');
   password = signal('');
@@ -20,8 +20,24 @@ export class AuthComponent {
   errorMessage = signal('');
   private authService = inject(AuthService);
   private authResponse?: Observable<AuthResponse>;
+  private router = inject(Router);
+  private userSub: Subscription;
+  private isAuthenticated = false;
 
-  constructor(private router: Router) {}
+  constructor() {
+    this.userSub = this.authService.user.subscribe((user) => {
+      this.isAuthenticated = !!user;
+      if (this.isAuthenticated) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
+
+  ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
+  }
 
   onSwitchMode() {
     this.isLoginMode.set(!this.isLoginMode());

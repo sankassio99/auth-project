@@ -21,9 +21,14 @@ export class AuthService {
   private readonly API_KEY = 'AIzaSyBGe9jO8SJU3jyNkj6N2izJkrYL1ehenBc';
   private readonly SIGN_UP_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
   private readonly VERIFY_PASSWORD_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`;
-  private user = new Subject<UserModel>();
+  public user = new Subject<UserModel>();
+  private isAuthenticated = false;
 
   constructor() {}
+
+  get getIsAuthenticated(): boolean {
+    return this.isAuthenticated;
+  }
 
   signIn(email: string, password: string): Observable<AuthResponse> {
     return this.httpClient
@@ -46,6 +51,7 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + +value.expiresIn * 1000);
     const user = new UserModel(value.email, value.localId, value.idToken, expirationDate);
     this.user.next(user);
+    this.isAuthenticated = true;
   }
 
   private handleSignInError(error: any) {
@@ -94,6 +100,9 @@ export class AuthService {
           }
 
           return throwError(() => new Error(errorMessage));
+        }),
+        tap((value) => {
+          this.handleSignIn(value);
         })
       );
   }
