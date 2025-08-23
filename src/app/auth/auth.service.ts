@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from 'rxjs';
 import { UserModel } from './user.model';
 
 export interface AuthResponse {
@@ -21,13 +21,10 @@ export class AuthService {
   private readonly API_KEY = 'AIzaSyBGe9jO8SJU3jyNkj6N2izJkrYL1ehenBc';
   private readonly SIGN_UP_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
   private readonly VERIFY_PASSWORD_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`;
-  public user = signal<UserModel | null>(null);
+  public user = new BehaviorSubject<UserModel | null>(null);
+  public isAuthenticated = false;
 
   constructor() {}
-
-  get isAuthenticated(): boolean {
-    return this.user() != null;
-  }
 
   signIn(email: string, password: string): Observable<AuthResponse> {
     return this.httpClient
@@ -49,7 +46,8 @@ export class AuthService {
   private handleSignIn(value: AuthResponse) {
     const expirationDate = new Date(new Date().getTime() + +value.expiresIn * 1000);
     const user = new UserModel(value.email, value.localId, value.idToken, expirationDate);
-    this.user.set(user);
+    this.user.next(user);
+    this.isAuthenticated = true;
   }
 
   private handleSignInError(error: any) {
