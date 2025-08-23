@@ -11,7 +11,7 @@ import { Observable, Subscription } from 'rxjs';
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
-export class AuthComponent implements OnInit, OnDestroy {
+export class AuthComponent implements OnInit {
   isLoginMode = signal(true);
   email = signal('');
   password = signal('');
@@ -21,23 +21,8 @@ export class AuthComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private authResponse?: Observable<AuthResponse>;
   private router = inject(Router);
-  private userSub: Subscription;
-  private isAuthenticated = false;
-
-  constructor() {
-    this.userSub = this.authService.user.subscribe((user) => {
-      this.isAuthenticated = !!user;
-      if (this.isAuthenticated) {
-        this.router.navigate(['/dashboard']);
-      }
-    });
-  }
 
   ngOnInit(): void {}
-
-  ngOnDestroy(): void {
-    this.userSub.unsubscribe();
-  }
 
   onSwitchMode() {
     this.isLoginMode.set(!this.isLoginMode());

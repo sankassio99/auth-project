@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { UserModel } from '../auth/user.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,26 +15,20 @@ import { AuthService } from '../auth/auth.service';
 export class DashboardComponent implements OnInit, OnDestroy {
   userEmail = signal('');
   private router = inject(Router);
-  private userSub: Subscription;
-  private isAuthenticated = false;
+  private user: UserModel | null = null;
   private authService = inject(AuthService);
-
-  constructor() {
-    this.userSub = this.authService.user.subscribe((user) => {
-      this.isAuthenticated = !!user;
-      this.userEmail.set(user.email);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.userSub.unsubscribe();
-  }
+  private userSubscription?: Subscription;
 
   ngOnInit() {
-    const email = localStorage.getItem('userEmail');
-    if (email) {
-      this.userEmail.set(email);
-    }
+    console.log('Initialized');
+
+    this.user = this.authService.user();
+
+    this.userEmail.set(this.user?.email ?? '');
+  }
+
+  ngOnDestroy() {
+    this.userSubscription?.unsubscribe();
   }
 
   onLogout() {
