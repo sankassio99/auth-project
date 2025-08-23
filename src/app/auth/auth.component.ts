@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css'
+  styleUrl: './auth.component.css',
 })
 export class AuthComponent {
   isLoginMode = signal(true);
@@ -43,33 +43,32 @@ export class AuthComponent {
 
     this.isLoading.set(true);
 
-      if (this.isLoginMode()) {
-        this.signIn();
-      } else {
-        this.signUpUser();
-      };
+    if (this.isLoginMode()) {
+      this.signIn();
+    } else {
+      this.signUpUser();
+    }
 
-      this.authResponse!.subscribe({
-        next: (res) => {
-          console.log(res);
-          this.router.navigate(['/dashboard']);
-        },
-        error: (errorMessage) => {
-          this.errorMessage.set(errorMessage);
-          this.isLoading.set(false);
-        },
-        complete: () => {
-          this.isLoading.set(false);
-        },
-      });
+    this.authResponse!.subscribe({
+      next: (res) => {
+        console.log(res);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (errorMessage) => {
+        this.errorMessage.set(errorMessage);
+        this.isLoading.set(false);
+      },
+      complete: () => {
+        this.isLoading.set(false);
+      },
+    });
   }
 
   private signUpUser() {
-    this.authResponse = this.authService
-      .signUp(this.email(), this.confirmPassword());
+    this.authResponse = this.authService.signUp(this.email(), this.confirmPassword());
   }
 
   private signIn() {
-    this.authResponse = this.authService.signIn(this.email(), this.password())
+    this.authResponse = this.authService.signIn(this.email(), this.password());
   }
 }
