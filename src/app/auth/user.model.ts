@@ -3,14 +3,23 @@ export class UserModel {
     public email: string,
     public id: string,
     private _token: string,
-    private _tokenExpirantionDate: Date
+    private _tokenExpirationDate: Date,
+    private _refreshToken?: string
   ) {}
 
   get token(): string | null {
-    if (!this._tokenExpirantionDate || new Date() > this._tokenExpirantionDate) {
+    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
       return null;
     }
 
     return this._token;
+  }
+
+  get refreshToken(): string | null {
+    return this._refreshToken || null;
+  }
+
+  get tokenExpirationDate(): Date {
+    return this._tokenExpirationDate;
   }
 }
