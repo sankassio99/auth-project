@@ -3,58 +3,6 @@
   background: #f8fafc;
 }
 
-.dashboard-header {
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 64px;
-}
-
-.header-content h1 {
-  color: #1a202c;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.user-email {
-  color: #4a5568;
-  font-size: 14px;
-}
-
-.logout-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #dc2626;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.logout-button:hover {
-  background: #b91c1c;
-}
 
 .dashboard-main {
   max-width: 1200px;
@@ -71,6 +19,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -91,7 +40,7 @@
   margin: 0 0 12px 0;
 }
 
-.welcome-card > p {
+.welcome-card>p {
   color: #4a5568;
   font-size: 16px;
   margin: 0 0 32px 0;
@@ -148,20 +97,20 @@
     padding-bottom: 16px;
     gap: 12px;
   }
-  
+
   .user-info {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .dashboard-main {
     padding: 24px 16px;
   }
-  
+
   .welcome-card {
     padding: 24px;
   }
-  
+
   .features-grid {
     grid-template-columns: 1fr;
     gap: 16px;

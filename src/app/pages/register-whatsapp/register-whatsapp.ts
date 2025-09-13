@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
+import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-register-whatsapp',
-  imports: [],
+  imports: [Header],
   templateUrl: './register-whatsapp.html',
   styleUrl: './register-whatsapp.css',
 })
@@ -36,7 +37,7 @@ export class RegisterWhatsapp {
     `;
   httpClient = inject(HttpClient);
 
-  
+
 
   fetchPage() {
     const url = 'https://jarvis-project-468922.rj.r.appspot.com/qr-code';
