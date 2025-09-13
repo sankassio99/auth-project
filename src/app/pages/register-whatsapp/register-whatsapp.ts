@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
-import { Header } from "../../components/header/header";
+import { Component, inject, signal } from '@angular/core';
+import { Header } from '../../components/header/header';
 
 @Component({
   selector: 'app-register-whatsapp',
@@ -9,35 +9,15 @@ import { Header } from "../../components/header/header";
   styleUrl: './register-whatsapp.css',
 })
 export class RegisterWhatsapp {
-  qrCodeHtmlPage = `
-      <html>
-        <head>
-          <title>WhatsApp Conectado</title>
-        </head>
-        <body>
-          <h1>WhatsApp Conectado!</h1>
-          <p>Não há QR Code disponível pois a sessão já está ativa.</p>
-          <p>Informações da conexão:</p>
-          <pre>{
-  "pushname": "Kassio San Tech",
-  "wid": {
-    "server": "c.us",
-    "user": "556392470299",
-    "_serialized": "556392470299@c.us"
-  },
-  "me": {
-    "server": "c.us",
-    "user": "556392470299",
-    "_serialized": "556392470299@c.us"
-  },
-  "platform": "smbi"
-}</pre>
-        </body>
-      </html>
-    `;
+  qrCodeHtmlPage = signal(`Loading QR Code...`);
   httpClient = inject(HttpClient);
 
-
+  constructor() {
+    this.fetchPage();
+    setInterval(() => {
+      this.fetchPage();
+    }, 30000); // Refresh every 30 seconds
+  }
 
   fetchPage() {
     const url = 'https://jarvis-project-468922.rj.r.appspot.com/qr-code';
@@ -51,7 +31,7 @@ export class RegisterWhatsapp {
       })
       .subscribe({
         next: (response) => {
-          this.qrCodeHtmlPage = response;
+          this.qrCodeHtmlPage.set(response);
         },
         error: (error) => {
           console.error('Error fetching QR code:', error);
