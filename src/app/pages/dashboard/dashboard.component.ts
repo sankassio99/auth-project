@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Header } from "../../components/header/header";
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Header } from '../../components/header/header';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,4 +11,6 @@ import { Header } from "../../components/header/header";
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  router = inject(Router);
+}
