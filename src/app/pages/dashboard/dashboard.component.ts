@@ -2,7 +2,7 @@ import { Component, signal, OnInit, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { AuthService } from '../pages/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +15,7 @@ import { AuthService } from '../pages/auth/auth.service';
 export class DashboardComponent implements OnInit {
   userEmail = signal('');
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private authService = inject<AuthService>(AuthService);
 
   constructor() {
     // Use effect to react to authentication state changes
