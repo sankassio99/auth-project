@@ -2,7 +2,7 @@ import { Component, signal, OnInit, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../pages/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
