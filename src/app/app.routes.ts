@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import { AuthComponent } from './pages/auth/auth.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
-import { RegisterWhatsapp } from './pages/register-whatsapp/register-whatsapp';
+import { AuthComponent } from './pages/auth/auth.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/auth', pathMatch: 'full' },
