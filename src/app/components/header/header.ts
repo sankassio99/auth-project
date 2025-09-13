@@ -1,10 +1,11 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { AuthService } from '../../pages/auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [TitleCasePipe, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
@@ -12,6 +13,7 @@ export class Header {
   userEmail = signal('');
   private router = inject(Router);
   private authService = inject<AuthService>(AuthService);
+  protected routeSegments: string[] = this.router.url.split('/').filter(Boolean);
 
   constructor() {
     // Use effect to react to authentication state changes
@@ -23,6 +25,8 @@ export class Header {
         this.userEmail.set('');
       }
     });
+
+    console.log('Current route segments:', this.routeSegments);
   }
 
   ngOnInit() {
